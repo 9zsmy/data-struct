@@ -234,7 +234,31 @@ public:
             if (cur->right != nullptr) q.push(cur->right);
         }
         cout << endl;
+    }
+    
+    //判断是否是满二叉树或完全二叉树
+    Info process(Node<T>* x){
+        if (x == nullptr) return {true,true,0};
+        Info leftInfo = process(x->left);
+        Info rightInfo = process(x->right);
 
+        int height = max(leftInfo.height, rightInfo.height) + 1;
+        bool isFull = false;
+        //bool isFUll = leftInfo.isFUll && rightInfo.isFUll && leftInfo.height == rightInfo.height;
+        bool isCBT = false;
+        //情况1：左右结点都为满，并且高度相等，一定是满二叉树并且是完全二叉树
+        if (leftInfo.isFUll && rightInfo.isFUll && leftInfo.height == rightInfo.height){
+            isFull = true;
+            isCBT = true;
+        }
+        //情况2：左结点是完全二叉树右结点为满二叉树 并且 左结点高度 比 右结点 大1
+        else if(leftInfo.isCBT && rightInfo.isFUll && leftInfo.height == rightInfo.height + 1) isCBT = true;
+        //情况3：左结点是满二叉树右结点为满二叉树 并且 左结点高度 比 右结点 大1
+        else if(leftInfo.isFUll && rightInfo.isFUll && leftInfo.height == rightInfo.height + 1) isCBT = true;
+        //情况4：左结点是满二叉树右结点为完全二叉树 并且 左结点高度 比 右结点 大1 且 高度相等
+        else if(leftInfo.isFUll && rightInfo.isCBT && leftInfo.height == rightInfo.height) isCBT = true;
+
+        return {isFull, isCBT, height};
     }
 
 
